@@ -52,7 +52,7 @@ public class TestCache {
         SqlSession session = sqlSessionFactory.openSession();
         try {
             EmployeeDao01 empDao = session.getMapper(EmployeeDao01.class);
-
+            System.out.println();
             long start01 = System.currentTimeMillis();
             EmployeeMapper emp = empDao.selectone("2");
             System.out.println(emp);
