@@ -27,6 +27,7 @@ public class TestCache {
             long end01 = System.currentTimeMillis();
             System.out.println(end01 - start01);
 
+            System.out.println();
             //session.clearCache();
             //session.close();
             //empDao.deleteEmp("4");
