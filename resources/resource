@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!--标签配置顺序不能跌倒-->
+    <properties resource="dbconfig.properties"/>
+
+    <!--延迟加载配置-->
+    <settings>
+        <!--开启二级缓存,true表示开启-->
+        <setting name="cacheEnabled" value="true"/>
+
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+    
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+
+    <mappers>
+        <mapper resource="com/mybatis/mapping/EmployeeMapper.xml"/>
+        <mapper resource="com/mybatis/mapping/EmployeeMapper01.xml"/>
+        <mapper resource="com/mybatis/mapping/DepartmentMapper.xml"/>
+        <mapper class="com.mybatis.dao.EmployeeDao02" />
+    </mappers>
+</configuration>

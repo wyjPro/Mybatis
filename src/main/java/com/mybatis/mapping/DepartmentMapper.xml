@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mybatis.dao.DepartmentDao">
+    <select id="selectone"  resultType="com.mybatis.bean.Department">
+      select * from department where e_id = #{e_id}
+    </select>
+
+    <!-- 分步查询 collection-->
+    <resultMap type="com.mybatis.bean.Department" id="mstep2">
+        <id column="e_id" property="e_id"/>
+        <result column="e_name" property="e_name"/>
+        <!-- 一个department对应多个employee -->
+        <collection property="emps" select="com.mybatis.dao.EmployeeDao.getEmpByDeptId" column="e_id">
+            <id column="id" property="e_id"/>
+            <result column="name" property="e_name"/>
+            <result column="address" property="e_address"/>
+            <result column="gender" property="e_gender"/>
+
+        </collection>
+    </resultMap>
+    <select id="getDeptWithEmpByStep" resultMap="mstep2">
+        SELECT e_id ,e_name FROM department WHERE e_id = #{e_id}
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

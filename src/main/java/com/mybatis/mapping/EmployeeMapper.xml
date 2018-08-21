@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--(1)开发方式一：-->
+<!--
+<mapper namespace="com.mybatis.bean.EmployeeMapper">
+    <select id="selOne" parameterType="String" resultType="com.mybatis.bean.EmployeeMapper">
+      select * from employee where id = #{id}
+    </select>
+</mapper>-->
+<!--(2)开发方式二：-->
+<mapper namespace="com.mybatis.dao.EmployeeDao01">
+
+    <!--开启mapper的namespace下的二级缓存-->
+    <cache></cache>
+
+    <select id="selectone"  resultType="com.mybatis.bean.EmployeeMapper" useCache="true">
+      select * from employee where id = #{id}
+    </select>
+    <select id="getAll"  resultType="com.mybatis.bean.EmployeeMapper">
+      select * from employee
+    </select>
+
+    <insert id="insertEmp">
+        insert into employee values (#{id}, #{name}, #{gender}, #{address})
+    </insert>
+
+    <update id="updateEmp">
+        update employee set name = #{name}, address=#{address}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmp">
+        delete from employee where id = #{id}
+    </delete>
+
+    <!--多条件查询
+        #{}默认采用预处理的方式去处理SQL语句
+        ${}是采用非预处理模式来处理数据
+    -->
+    <select id="queryList" resultType="com.mybatis.bean.EmployeeMapper">
+        <!--select * from employee where name like '${param1}%' and gender = #{param2}-->
+        select * from employee where name like '${name}%' and gender = #{gender}
+    </select>
+
+    <select id="queryList2" resultType="com.mybatis.bean.EmployeeMapper">
+        select * from employee where name like '${name}%' and gender = #{gender}
+    </select>
+
+    <!--动态查询-->
+    <select id="qureyByif" resultType="com.mybatis.bean.EmployeeMapper">
+        select * from employee where 1=1
+        <if test="name != null">
+            and name like '${name}%'
+        </if>
+        <if test="address != null">
+            and address = #{address}
+        </if>
+    </select>
+
+    <select id="qureyBychoose" resultType="com.mybatis.bean.EmployeeMapper">
+        select * from employee where 1=1
+        <choose>
+            <when test="name != null">
+                and name like '${name}%'
+            </when>
+            <when test="address != null">
+                and address = #{address}
+            </when>
+            <otherwise>
+                order by name
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--处理where 1=1 问题-->
+    <select id="qureyBytrim" resultType="com.mybatis.bean.EmployeeMapper">
+        select * from employee
+       <!--<where>
+           <if test="name != null">
+               and name like '${name}%'
+           </if>
+           <if test="address != null">
+               and address = #{address}
+           </if>
+       </where>-->
+        <trim prefix="WHERE" suffixOverrides="AND |OR">
+            <if test="name != null">
+                name like '${name}%'
+            </if>
+            <if test="address != null">
+                and address = #{address}
+            </if>
+        </trim>
+    </select>
+
+
+    <!--批量删除，foreach-->
+    <delete id="deleteByList">
+      delete from employee where id in
+      <foreach collection="list" open="(" separator="," close=")" item="ite">
+          #{ite}
+      </foreach>
+    </delete>
+    <delete id="deleteByArray">
+        delete from employee where id in
+        <foreach collection="array" open="(" separator="," close=")" item="ite">
+            #{ite}
+        </foreach>
+    </delete>
+
+    <update id="updataBySet">
+        update employee
+        <set>
+            <if test="name != null">name=#{name},</if>
+            <if test="gender != null">gender=#{gender},</if>
+            <if test="address != null">address=#{address}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

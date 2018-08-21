@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mybatis.dao.EmployeeDao">
+
+    <!--当数据库中的列名称和实体类的属性名字不一样时，可以通过以下二种方式进行对应-->
+    <select id="getAll" resultType="com.mybatis.bean.Employee">
+        select id e_id, name e_name, gender e_gender, address e_address from employee
+    </select>
+
+    <resultMap id="resultMap" type="com.mybatis.bean.Employee">
+        <id column="id" property="e_id" ></id>
+        <result column="name" property="e_name"></result>
+        <result column="gender" property="e_gender"></result>
+        <result column="address" property="e_address"></result>
+    </resultMap>
+    <!--resultMap配置名称要和resultMap标签的id一致，使用ResultMap就不能使用ResultType-->
+    <select id="getAll2" resultMap="resultMap">
+        select * from employee
+    </select>
+
+    <resultMap id="resultMap2" type="com.mybatis.bean.Employee">
+        <id column="id" property="e_id" ></id>
+        <result column="name" property="e_name"></result>
+        <result column="gender" property="e_gender"></result>
+        <result column="address" property="e_address"></result>
+        <!--<result column="e_id" property="depart.e_id"></result>
+        <result column="e_name" property="depart.e_name"></result>-->
+        <association property="depart" javaType="com.mybatis.bean.Department">
+            <id column="e_id" property="e_id"></id>
+            <result column="e_name" property="e_name"></result>
+        </association>
+    </resultMap>
+    <select id="getAll3" resultMap="resultMap2">
+        SELECT e.*,d.* from employee e,department d WHERE e.depart_id = d.e_id
+    </select>
+
+    <resultMap id="selectByStep" type="com.mybatis.bean.Employee">
+        <id column="id" property="e_id" ></id>
+        <result column="name" property="e_name"></result>
+        <result column="gender" property="e_gender"></result>
+        <result column="address" property="e_address"></result>
+        <!--column不是传e_id-->
+        <association property="depart" select="com.mybatis.dao.DepartmentDao.selectone" column="depart_id">
+        </association>
+    </resultMap>
+    <select id="selone" resultMap="selectByStep" >
+        select * from employee where id = #{id}
+    </select>
+
+    <select id="getEmpByDeptId" resultType="com.mybatis.bean.Employee">
+        select id, name, gender, address, depart_id from employee where depart_id = #{depart_id}
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
